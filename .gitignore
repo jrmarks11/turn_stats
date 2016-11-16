@@ -84,3 +84,4 @@ pickle-email-*.html
 *~
 
 track_o_bot.yml
+/spec/vcr

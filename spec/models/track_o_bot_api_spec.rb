@@ -15,5 +15,16 @@ RSpec.describe TrackOBotAPI, type: :model do
         expect(history['meta']['current_page']).to eql 1
       end
     end
+
+    it "should allow me to query for a specific page" do
+      VCR.use_cassette('trackobot/page3') do
+        history =  client.history :page => 3
+
+        expect(history.code).to eql 200
+        expect(history['history'].count).to eql 15
+        expect(history['meta']['current_page']).to eql 3
+      end
+
+    end
   end
 end

@@ -10,10 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161114154200) do
+ActiveRecord::Schema.define(version: 20161117125442) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "games", force: :cascade do |t|
+    t.integer  "trackobot_id"
+    t.string   "winner_class"
+    t.string   "loser_class"
+    t.string   "winner_deck"
+    t.string   "loser_deck"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "moves", force: :cascade do |t|
+    t.integer  "game_id"
+    t.boolean  "winner"
+    t.integer  "turn"
+    t.string   "card_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -34,4 +53,5 @@ ActiveRecord::Schema.define(version: 20161114154200) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "moves", "games"
 end

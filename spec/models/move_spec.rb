@@ -19,4 +19,24 @@ RSpec.describe Move, type: :model do
       end
     end
   end
+
+  describe "#import!" do
+    it "should import data" do
+      move_1 = {"player"=>"me", "turn"=>1,"card"=>{"id"=>"EX1_509", "name"=>"Murloc Tidecaller", "mana"=>1}}
+      move_2 = {"player"=>"opponent", "turn"=>2, "card"=>{"id"=>"GAME_005", "name"=>"The Coin", "mana"=>nil}}
+     
+      g = Game.new
+      m = g.moves.new
+
+      m.import!(move_1, true)
+      expect(m.turn).to eql 1
+      expect(m.card_name).to eql 'Murloc Tidecaller'
+      expect(m.winner).to be true
+      
+      m.import!(move_2, false)
+      expect(m.turn).to eql 2
+      expect(m.card_name).to eql 'The Coin'
+      expect(m.winner).to be false
+    end
+  end
 end

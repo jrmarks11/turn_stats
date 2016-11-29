@@ -27,4 +27,12 @@ RSpec.describe TrackOBotAPI, type: :model do
 
     end
   end
+
+  describe "#pages" do
+    it "should allow me to find out how many pages i have in my history" do
+      VCR.use_cassette('trackobot/pages') do
+        expect(client.pages).to eql 226
+      end
+    end
+  end
 end

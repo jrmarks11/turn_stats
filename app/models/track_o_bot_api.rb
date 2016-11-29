@@ -11,4 +11,8 @@ class TrackOBotAPI
     query_options = @auth.merge options
     self.class.get('/profile/history.json', query: query_options)
   end
+
+  def pages(options={})
+    history['meta']['total_pages']
+  end
 end

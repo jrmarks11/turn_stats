@@ -39,4 +39,29 @@ FactoryGirl.define do
       create(:move, game: game)
     end
   end
+
+  factory :sixtey_seven, class: Game do
+    after(:create) do |game|
+      create(:win_axe, game: game)
+      create(:win_axe, game: game)
+      create(:lose_axe, game: game)
+    end
+  end
+
+  factory :twenty_five, class: Game do
+    after(:create) do |game|
+      create(:win_axe, game: game)
+      create(:lose_axe, game: game)
+      create(:lose_axe, game: game)
+      create(:lose_axe, game: game)
+    end
+  end
+
+  factory :two_moves_game, class: Game do
+    after(:create) do |game|
+      create(:win_axe, game: game)
+      create(:lose_axe, game: game)
+      create(:win_ghoul, game: game)
+    end
+  end
 end

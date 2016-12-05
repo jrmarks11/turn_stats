@@ -10,6 +10,8 @@ class Report
       {name: card_name, count: results.count, percent: percent}
     end
 
+    cards = cards.select!{|c| c[:count] > 10}
+
     cards = cards.sort_by{|c| c[:percent]}.reverse
   end
 end

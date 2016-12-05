@@ -57,9 +57,9 @@ RSpec.describe Game, type: :model do
         create :game_two
         create :new_game
         create :old_game
-        expect(Game.find_moves(:class => 'Warlock').count).to eql 4
+        expect(Game.find_moves(:class => 'Warlock').count).to eql 3
         expect(Game.find_moves(:class => 'Paladin').count).to eql 1
-        expect(Game.find_moves(:class => 'Hunter').count).to eql 2
+        expect(Game.find_moves(:class => 'Hunter').count).to eql 0
       end
 
       it "has a turn option" do
@@ -125,6 +125,15 @@ RSpec.describe Game, type: :model do
         game.add_move(move_1, true)
 
         expect(game.moves.count).to eql 1
+      end
+    end
+
+    context "#moves_for" do
+      it "should return only the moves of the right class" do
+        game = create(:winner_move)
+        expect(game.moves_for('Druid').count).to eql 1
+        expect(game.moves_for('Warrior').count).to eql 1
+        expect(game.moves.count).to eql 2
       end
     end
   end

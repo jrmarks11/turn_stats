@@ -10,7 +10,12 @@ class Game < ApplicationRecord
     games = Game.where("time > ? and time < ?", start_time, end_time)
     games = games.select{|g| g.winner_class == klass || g.loser_class == klass} unless klass == '*'
 
-    moves = games.map(&:moves).flatten
+    if klass == '*'
+      moves = games.map(&:moves).flatten
+    else
+      moves = games.map{|m| m.moves_for(klass)}.flatten
+    end
+
     moves = moves.select!{|m| m.turn == turn.to_i} unless turn == '*' 
 
     moves
@@ -44,5 +49,13 @@ class Game < ApplicationRecord
   def add_move(data, win)
     new_move = self.moves.new
     new_move.import!(data, win)
+  end
+
+  def moves_for(klass)
+    mvs = self.moves
+    result = []
+    result << mvs.select{|m| m.winner} if klass == self.winner_class
+    result << mvs.select{|m| !m.winner} if klass == self.loser_class
+    result.flatten
   end
 end

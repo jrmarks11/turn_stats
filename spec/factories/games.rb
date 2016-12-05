@@ -64,4 +64,13 @@ FactoryGirl.define do
       create(:win_ghoul, game: game)
     end
   end
+
+  factory :winner_move, class: Game do
+    winner_class 'Druid'
+    loser_class 'Warrior'
+    after(:create) do |game|
+      create(:lose_axe, game: game)
+      create(:win_ghoul, game: game)
+    end
+  end
 end

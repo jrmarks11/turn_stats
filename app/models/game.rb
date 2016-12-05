@@ -1,7 +1,25 @@
 class Game < ApplicationRecord
   has_many :moves
 
+  def self.find_moves(opts)
+    start_time = opts[:start_time] || 100.years.ago
+    end_time = opts[:end_date] || DateTime.now
+    klass = opts[:class] || '*'
+    turn = opts[:turn] || '*'
+
+    games = Game.where("time > ? and time < ?", start_time, end_time)
+    games = games.select{|g| g.winner_class == klass || g.loser_class == klass} unless klass == '*'
+
+    moves = games.map(&:moves).flatten
+    moves = moves.select!{|m| m.turn == turn.to_i} unless turn == '*' 
+
+    moves
+  end
+
   def import!(data)
+    # TODO: this is hacky need to do better error checking and decide whether added is needed
+    self.time = DateTime.strptime(data['added'], "%Y-%m-%dT%H") unless data['added'].nil?
+
     results = {}
     if data['result'] == 'win'
       results = {'winner'=> 'hero', 'loser'=> 'opponent', 'me' => true, 'opponent' => false}
@@ -15,6 +33,7 @@ class Game < ApplicationRecord
     self.loser_deck = data["#{results['loser']}_deck"]
     self.save!
 
+    # TODO: this also could be nicer
     if(data.has_key?('card_history'))
       data['card_history'].each do |move|
         add_move(move, results[move['player']])

@@ -29,7 +29,9 @@ class GameLoader
     puts "________________________________________________________________________________"
     
     his['history'].each do |game|
-      db_game = Game.find_or_create_by(trackobot_id: game['id'])
+      next if Game.find_by(trackobot_id: game['id'])
+
+      db_game = Game.create(trackobot_id: game['id'])
       db_game.import!(game)
     end
   end

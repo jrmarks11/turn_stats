@@ -25,6 +25,22 @@ RSpec.describe GameLoader, type: :model do
       expect(Game.count).to eql 3
       expect(Game.all.map(&:trackobot_id)).to match_array [1, 2, 3]
     end
+
+    it "should not import if a game has already been imported" do
+        move_1 = {"player"=>"me", "turn"=>1,"card"=>{"id"=>"EX1_509", "name"=>"Murloc Tidecaller", "mana"=>1}}
+        move_2 = {"player"=>"opponent", "turn"=>1, "card"=>{"id"=>"GAME_005", "name"=>"The Coin", "mana"=>nil}}
+
+        data = {'history' => [{"id"=>51522331, "mode"=>"ranked", "hero"=>"Warlock", "hero_deck"=>"Murloc", "opponent"=>"Guldan",
+          "opponent_deck"=>"Reno", "coin"=>false, "result"=>"win", "duration"=>209, "rank"=>18, "legend"=>nil, "note"=>nil,
+          "added"=>"2016-11-28T02:27:59.000Z", "card_history"=>[move_1, move_2]
+        }]}
+
+        2.times do 
+          loader.load_db(data)
+          expect(Game.count).to eql 1
+          expect(Move.count).to eql 2
+        end
+    end
   end
 
   describe "#load_all" do

@@ -62,6 +62,17 @@ RSpec.describe Game, type: :model do
         expect(Game.find_moves(:class => 'Hunter').count).to eql 0
       end
 
+      it "has an opponent option" do
+        create :game_one
+        create :game_two
+        create :new_game
+        create :old_game
+        expect(Game.find_moves(opponent: 'Warlock').count).to eql 4
+        expect(Game.find_moves(class: 'Warlock', opponent: 'Mage').count).to eql 2
+        expect(Game.find_moves(class: 'Warlock', opponent: 'Hunter').count).to eql 1
+
+      end
+
       it "has a turn option" do
         create :game_two
         expect(Game.find_moves(:turn => 2).count).to eql 1
@@ -133,15 +144,6 @@ RSpec.describe Game, type: :model do
         game = create(:winner_move)
         expect(game.moves_for('Druid').count).to eql 1
         expect(game.moves_for('Warrior').count).to eql 1
-        expect(game.moves.count).to eql 2
-      end
-    end
-
-    context "#moves_against" do
-      it "should only return moves against the right class" do
-        game = create(:winner_move)
-        expect(game.moves_against('Druid').count).to eql 1
-        expect(game.moves_against('Warrior').count).to eql 1
         expect(game.moves.count).to eql 2
       end
     end

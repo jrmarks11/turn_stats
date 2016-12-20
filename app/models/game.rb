@@ -52,10 +52,30 @@ class Game < ApplicationRecord
   end
 
   def moves_for(klass)
-    mvs = self.moves
+    moves_for_select(klass, self.moves)
+  end
+
+  def moves_against(klass)
+    moves_against_select(klass, self.moves)
+  end
+
+  def moves_for_against(for_class, against_class)
+    moves_against_select(against_class, moves_for(for_class))
+  end
+
+  private
+  # TODO refactor
+  def moves_for_select(klass, moves)
     result = []
-    result << mvs.select{|m| m.winner} if klass == self.winner_class
-    result << mvs.select{|m| !m.winner} if klass == self.loser_class
+    result << moves.select{|m| m.winner} if klass == self.winner_class
+    result << moves.select{|m| !m.winner} if klass == self.loser_class
+    result.flatten
+  end
+
+  def moves_against_select(klass, moves)
+    result = []
+    result << moves.select{|m| m.winner} if klass == self.loser_class
+    result << moves.select{|m| !m.winner} if klass == self.winner_class
     result.flatten
   end
 end

@@ -129,10 +129,19 @@ RSpec.describe Game, type: :model do
     end
 
     context "#moves_for" do
-      it "should return only the moves of the right class" do
+      it "should return only the moves for the right class" do
         game = create(:winner_move)
         expect(game.moves_for('Druid').count).to eql 1
         expect(game.moves_for('Warrior').count).to eql 1
+        expect(game.moves.count).to eql 2
+      end
+    end
+
+    context "#moves_against" do
+      it "should only return moves against the right class" do
+        game = create(:winner_move)
+        expect(game.moves_against('Druid').count).to eql 1
+        expect(game.moves_against('Warrior').count).to eql 1
         expect(game.moves.count).to eql 2
       end
     end
